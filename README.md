@@ -3,7 +3,7 @@ This script is intended to parse all the attributes of a gtf file to different c
 The binary is already available, but if you prefer to compile it yourself, you can do it by using this command
 
 ```bash
-g++ --std=c++17 gtfParser.cpp -o gtfParser -Wall
+g++ --std=c++17 gtfParser.cpp -o gtfParser -O3
 ```
 
 I did't use a real parser for the command line arguments, so if you don't use it as expected, there could be weird behaviors. You can find the help by running this:
