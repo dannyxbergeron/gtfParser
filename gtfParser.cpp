@@ -240,9 +240,13 @@ void findAttributes(const string& file, bool parse)
         {
             // insert the attribute name substring in a set
             allAtt.insert(line.substr(start, found - start));
+            if(line.substr(start, found - start) == "The") cout << line << '\n';
+            // Skip the attribute value
+            found = line.find('\"', found+1);
+            found = line.find('\"', found+1);
             // skip the ; and the space
             start = line.find(';', found+1) + 2;
-            found = line.find(' ', start);
+            found = line.find(' ', start+1);
         }
     }
 
