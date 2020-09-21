@@ -132,18 +132,6 @@ void readFile(const string& file)
     fileStream.rdbuf()->pubsetbuf(_buffer, 16184);
     string line, attName, att;
     robin_hood::unordered_map<string, string> attributes;
-    int lineToSkip = 0;
-
-    // To remove the header
-    while(true)
-    {
-        getline(fileStream, line);
-        if(line[0] == '#') lineToSkip++;
-        else break;
-    }
-    fileStream.clear();
-    fileStream.seekg(0, ios::beg);
-    for(int i = 0;i < lineToSkip;i++) getline(fileStream, line);
 
     // initiate the position integers
     size_t found;
@@ -154,6 +142,7 @@ void readFile(const string& file)
     while(getline(fileStream, line))
     {
         sv = line;
+        if(line[0] == '#') continue; // CHANGED
         start = 0; // reinitialize the first position
         found = 0;
         // go directly to the last column
@@ -174,15 +163,16 @@ void readFile(const string& file)
 
             // get the att
             start = line.find('\"', found+1) + 1;
-            found = line.find('\"', start+1);
+            found = line.find('\"', start);
             att = line.substr(start, found - start);
 
             // skip the ; and the space
             start = line.find(';', found+1) + 2;
-            found = line.find(' ', start+1);
+            found = line.find(' ', start);
             // cout << attName << "|" << att << endl;
 
             // put the attribute name and attribut in a map
+            if(att == "") att = "NA"; // if the attribute is empty, put NA instead
             attributes[attName] = att;
         }
 
@@ -227,21 +217,7 @@ void findAttributes(const string& file, bool parse)
     fileStream.rdbuf()->pubsetbuf(_buffer, 16184);
     string line;
     unordered_set<string> allAtt;
-    int lineToSkip = 0;
     int i = 0;
-
-    // To remove the header
-    while(true)
-    {
-        getline(fileStream, line);
-        if(line[0] == '#') lineToSkip++;
-        else break;
-    }
-    // clear the string stream
-    fileStream.clear();
-    // put the string string to the beginning
-    fileStream.seekg(0, ios::beg);
-    for(i = 0;i < lineToSkip;i++) getline(fileStream, line);
 
     // initiate the position integers
     size_t found;
@@ -250,6 +226,7 @@ void findAttributes(const string& file, bool parse)
     // iterate through each line
     while(getline(fileStream, line))
     {
+        if(line[0] == '#') continue; // CHANGED
         start = 0; // reinitialize the first position
         // go directly to the last column
         for(int i=0;i<8;i++) start = line.find("\t", start+1);
@@ -265,7 +242,7 @@ void findAttributes(const string& file, bool parse)
             allAtt.insert(line.substr(start, found - start));
             // skip the ; and the space
             start = line.find(';', found+1) + 2;
-            found = line.find(' ', start+1);
+            found = line.find(' ', start);
         }
     }
 
