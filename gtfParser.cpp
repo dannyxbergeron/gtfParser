@@ -173,6 +173,9 @@ void readFile(const string& file)
 
             // put the attribute name and attribut in a map
             if(att == "") att = "NA"; // if the attribute is empty, put NA instead
+            // if there is already an attribute for this column, append to it
+            if(attributes.find(attName) != attributes.end())
+                att = attributes[attName] + "|" + att;
             attributes[attName] = att;
         }
 
